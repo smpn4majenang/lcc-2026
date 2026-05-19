@@ -3,507 +3,844 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microsite Dinamis</title>
+    <title>Lomba Cerdas Cermat - Harlah SMPN 4 Majenang</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
+    <!-- Google Fonts: Inter & Rajdhani -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        @keyframes blob {
-            0% { transform: translate(0px, 0px) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-            100% { transform: translate(0px, 0px) scale(1); }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at center, #0f172a, #020617);
         }
-        .animate-blob { animation: blob 7s infinite; }
-        .animation-delay-2000 { animation-delay: 2s; }
-        .animation-delay-4000 { animation-delay: 4s; }
-        .animate-fade-in-up { animation: fadeInUp 0.5s ease-out; }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .font-game {
+            font-family: 'Rajdhani', sans-serif;
         }
-        .animate-shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        /* Modal Animation */
-        .modal-enter { animation: modalIn 0.2s ease-out forwards; }
-        @keyframes modalIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        .neon-blue { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+        .neon-red { box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+        .neon-green { box-shadow: 0 0 15px rgba(34, 197, 94, 0.4); }
+        .neon-rose { box-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
     </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="text-slate-100 min-h-screen flex flex-col justify-between overflow-x-hidden">
 
-    <script type="text/babel">
-        // =====================================================================
-        // KONFIGURASI PENTING (WAJIB DIISI)
-        // =====================================================================
+    <!-- HEADER -->
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div class="p-2.5 bg-blue-600 rounded-lg text-white font-game font-bold text-xl tracking-wider shadow-lg shadow-blue-500/30">
+                LIVE
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent font-game uppercase">Lomba Cerdas Cermat</h1>
+                <p class="text-xs text-slate-400">Harlah SMPN 4 Majenang</p>
+            </div>
+        </div>
         
-        // 1. URL SCRIPT
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaa_GX_fjlyV1dkgBDxw9bPJC5t9H_G2kPK_GT6cvejyWqWyuw3KE6GNXILWZJVAZ9Iw/exec";
+        <!-- Timer Global -->
+        <div class="flex items-center gap-4 bg-slate-900/90 border border-slate-800 rounded-xl px-5 py-2 neon-blue">
+            <div class="text-right">
+                <span class="text-xs text-slate-400 uppercase tracking-widest block font-semibold">Waktu Sisa</span>
+                <span id="timer-display" class="font-game text-3xl font-bold text-blue-400 tracking-wider">00:30</span>
+            </div>
+            <div class="flex flex-col gap-1">
+                <button onclick="startTimer()" class="p-1.5 bg-emerald-600 hover:bg-emerald-500 rounded text-white transition-colors text-xs flex items-center justify-center animate-pulse" title="Mulai Timer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>
+                </button>
+                <button onclick="pauseTimer()" class="p-1.5 bg-amber-600 hover:bg-amber-500 rounded text-white transition-colors text-xs flex items-center justify-center" title="Jeda Timer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 9v6m4-6v6"/></svg>
+                </button>
+            </div>
+            <button onclick="resetTimer()" class="px-2.5 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-300 transition-colors">
+                Reset
+            </button>
+        </div>
+
+        <!-- Google Sheets Cloud Indicator -->
+        <div class="flex items-center gap-2 bg-slate-900/50 px-3 py-2 rounded-xl border border-slate-800">
+            <span id="sync-status-dot" class="w-2.5 h-2.5 bg-gray-500 rounded-full"></span>
+            <div class="text-left">
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Status Sheets</span>
+                <span id="sync-status-text" class="text-xs font-semibold text-slate-300">Belum Terhubung</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENT AREA -->
+    <main class="flex-1 p-6 max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6">
         
-        // 2. PIN ADMIN
-        const ADMIN_PIN = "spenforma1"; 
-
-        // 3. URL GOOGLE SHEET DATABASE
-        const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1w8rb84hc9IpWduhIucxVUhnA6Vw3OnX4VdWYMVtAKj4/edit";
-
-        // =====================================================================
-
-        // DATA TEMA (WARNA BACKGROUND) - DITAMBAH MENJADI 10 TEMA
-        const THEMES = {
-            galaksi: {
-                name: 'Galaksi',
-                bg: 'bg-slate-900',
-                gradient: 'from-slate-900 via-purple-900/40 to-slate-900',
-                blob1: 'bg-purple-500',
-                blob2: 'bg-cyan-500',
-                preview: 'bg-slate-800 border-purple-500'
-            },
-            hutan: {
-                name: 'Hutan',
-                bg: 'bg-stone-900',
-                gradient: 'from-stone-900 via-green-900/40 to-stone-900',
-                blob1: 'bg-green-600',
-                blob2: 'bg-emerald-500',
-                preview: 'bg-stone-800 border-green-500'
-            },
-            samudra: {
-                name: 'Samudra',
-                bg: 'bg-blue-950',
-                gradient: 'from-blue-950 via-cyan-900/40 to-blue-950',
-                blob1: 'bg-blue-500',
-                blob2: 'bg-sky-400',
-                preview: 'bg-blue-900 border-blue-500'
-            },
-            mewah: {
-                name: 'Mewah',
-                bg: 'bg-neutral-950',
-                gradient: 'from-neutral-950 via-zinc-800/40 to-neutral-950',
-                blob1: 'bg-white',
-                blob2: 'bg-zinc-500',
-                preview: 'bg-black border-white'
-            },
-            senja: {
-                name: 'Senja',
-                bg: 'bg-rose-950',
-                gradient: 'from-rose-950 via-orange-900/40 to-rose-950',
-                blob1: 'bg-orange-500',
-                blob2: 'bg-rose-500',
-                preview: 'bg-rose-900 border-orange-500'
-            },
-            delima: {
-                name: 'Delima',
-                bg: 'bg-red-950',
-                gradient: 'from-red-950 via-rose-900/40 to-red-950',
-                blob1: 'bg-red-600',
-                blob2: 'bg-rose-500',
-                preview: 'bg-red-900 border-red-500'
-            },
-            lavender: {
-                name: 'Lavender',
-                bg: 'bg-fuchsia-950',
-                gradient: 'from-fuchsia-950 via-purple-900/40 to-fuchsia-950',
-                blob1: 'bg-fuchsia-400',
-                blob2: 'bg-purple-400',
-                preview: 'bg-fuchsia-900 border-fuchsia-400'
-            },
-            kopi: {
-                name: 'Kopi',
-                bg: 'bg-amber-950', // Menggunakan amber gelap untuk cokelat
-                gradient: 'from-amber-950 via-orange-900/40 to-amber-950',
-                blob1: 'bg-amber-600',
-                blob2: 'bg-orange-600',
-                preview: 'bg-amber-900 border-orange-500'
-            },
-            mint: {
-                name: 'Mint',
-                bg: 'bg-teal-950',
-                gradient: 'from-teal-950 via-emerald-900/40 to-teal-950',
-                blob1: 'bg-teal-400',
-                blob2: 'bg-emerald-300',
-                preview: 'bg-teal-900 border-teal-400'
-            },
-            midnight: {
-                name: 'Midnight',
-                bg: 'bg-indigo-950',
-                gradient: 'from-indigo-950 via-slate-900/80 to-indigo-950',
-                blob1: 'bg-indigo-600',
-                blob2: 'bg-blue-600',
-                preview: 'bg-indigo-950 border-indigo-500'
-            }
-        };
-
-        // Icons
-        const Plus = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>;
-        const Trash2 = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>;
-        const ExternalLink = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>;
-        const Lock = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>;
-        const Unlock = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>;
-        const LayoutGrid = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>;
-        const LinkIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>;
-        const AlertTriangle = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>;
-        const LogOut = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>;
-        const SheetIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>;
-        const Palette = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>;
-
-        function App() {
-            // State
-            const [links, setLinks] = React.useState([]);
-            const [view, setView] = React.useState('public');
-            const [apiUrl] = React.useState(GOOGLE_SCRIPT_URL);
-            const [sheetUrl] = React.useState(GOOGLE_SHEET_URL);
-            const [isLoading, setIsLoading] = React.useState(false);
-            const [statusMsg, setStatusMsg] = React.useState('');
+        <!-- MAIN DISPLAY: SCREEN & SCORES (Spans 3 columns) -->
+        <div class="lg:col-span-3 flex flex-col gap-6">
             
-            // TEMA BACKGROUND (Fitur Tambahan)
-            // Mengambil tema dari penyimpanan, jika tidak ada default ke 'galaksi'
-            const [currentTheme, setCurrentTheme] = React.useState(() => localStorage.getItem('siteTheme') || 'galaksi');
-            
-            // Auth State
-            const [showAuthModal, setShowAuthModal] = React.useState(false);
-            const [inputPin, setInputPin] = React.useState('');
-            const [isPinError, setIsPinError] = React.useState(false);
-
-            // Delete Confirmation State
-            const [deleteId, setDeleteId] = React.useState(null);
-            
-            // Input State
-            const [newLabel, setNewLabel] = React.useState('');
-            const [newUrl, setNewUrl] = React.useState('');
-
-            React.useEffect(() => {
-                if (apiUrl && apiUrl.includes('script.google.com')) {
-                    fetchLinks();
-                } else {
-                    setStatusMsg('⚠️ URL Script belum diisi di kode!');
-                }
-            }, []);
-
-            // Simpan tema setiap kali user menggantinya
-            React.useEffect(() => {
-                localStorage.setItem('siteTheme', currentTheme);
-            }, [currentTheme]);
-
-            const fetchLinks = async () => {
-                if (!apiUrl) return;
-                setIsLoading(true);
-                try {
-                    const res = await fetch(apiUrl);
-                    const data = await res.json();
-                    setLinks(data);
-                    setStatusMsg('');
-                } catch (err) {
-                    console.error(err);
-                    setStatusMsg('Gagal mengambil data.');
-                } finally {
-                    setIsLoading(false);
-                }
-            };
-
-            const saveToSheet = async (updatedLinks) => {
-                if (!apiUrl) return;
-                setIsLoading(true);
-                try {
-                    await fetch(apiUrl, {
-                        method: 'POST',
-                        body: JSON.stringify(updatedLinks)
-                    });
-                    setStatusMsg('✅ Data tersimpan!');
-                    setTimeout(() => setStatusMsg(''), 3000);
-                } catch (err) {
-                    console.error(err);
-                    setStatusMsg('❌ Gagal menyimpan.');
-                } finally {
-                    setIsLoading(false);
-                }
-            };
-
-            const addLink = (e) => {
-                e.preventDefault();
-                if (!newLabel || !newUrl) return;
-
-                let formattedUrl = newUrl;
-                if (!/^https?:\/\//i.test(newUrl)) {
-                    formattedUrl = 'https://' + newUrl;
-                }
-
-                const gradients = [
-                    'from-purple-500 to-indigo-500', 'from-green-400 to-emerald-600',
-                    'from-orange-400 to-pink-500', 'from-blue-400 to-indigo-600',
-                    'from-pink-500 to-rose-500', 'from-yellow-400 to-orange-500'
-                ];
-                const randomColor = gradients[Math.floor(Math.random() * gradients.length)];
-
-                const newLinkObj = {
-                    id: Date.now(),
-                    label: newLabel,
-                    url: formattedUrl,
-                    color: randomColor
-                };
-
-                const updatedLinks = [...links, newLinkObj];
-                setLinks(updatedLinks);
-                saveToSheet(updatedLinks);
-                setNewLabel('');
-                setNewUrl('');
-            };
-
-            const requestDelete = (id) => {
-                setDeleteId(id);
-            };
-
-            const confirmDelete = () => {
-                if (deleteId) {
-                    const updatedLinks = links.filter(link => link.id !== deleteId);
-                    setLinks(updatedLinks);
-                    saveToSheet(updatedLinks);
-                    setDeleteId(null);
-                }
-            };
-
-            // AUTHENTICATION LOGIC
-            const handleAdminClick = () => {
-                if (view === 'admin') return;
-                setShowAuthModal(true);
-                setInputPin('');
-                setIsPinError(false);
-            };
-
-            const verifyPin = (e) => {
-                e.preventDefault();
-                if (inputPin === ADMIN_PIN) {
-                    setView('admin');
-                    setShowAuthModal(false);
-                    setInputPin('');
-                } else {
-                    setIsPinError(true);
-                    setTimeout(() => setIsPinError(false), 500); 
-                }
-            };
-
-            const handleLogout = () => {
-                setView('public');
-            };
-
-            // LOAD CONFIG TEMA
-            const theme = THEMES[currentTheme] || THEMES.galaksi;
-
-            return (
-                <div className={`min-h-screen ${theme.bg} font-sans text-white p-4 flex flex-col items-center justify-center relative overflow-hidden transition-colors duration-700`}>
-                    <div className={`absolute inset-0 bg-gradient-to-br ${theme.gradient} z-0 transition-all duration-700`}></div>
-                    <div className={`absolute top-10 left-10 w-72 h-72 ${theme.blob1} rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob z-0 transition-colors duration-700`}></div>
-                    <div className={`absolute top-10 right-10 w-72 h-72 ${theme.blob2} rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000 z-0 transition-colors duration-700`}></div>
-
-                    {/* Content Wrapper */}
-                    <div className="w-full max-w-md z-10 flex flex-col items-center">
-                        
-                        {/* 1. HEADER (JUDUL & DESKRIPSI) - SELALU DI ATAS */}
-                        <div className="text-center mb-6 w-full">
-                            <div className="w-20 h-20 mx-auto mb-3 rounded-full p-1 bg-gradient-to-tr from-purple-400 to-cyan-400">
-                                <div className="w-full h-full bg-slate-800 rounded-full flex items-center justify-center overflow-hidden">
-                                   <span className="text-2xl">🚀</span>
-                                </div>
-                            </div>
-                            <h1 className="text-2xl font-bold text-white uppercase tracking-wider">BIODATA MURID</h1>
-                            <p className="text-xs text-blue-200 mt-2 px-4 leading-relaxed font-light">
-                                Aplikasi ini dinamis karena dapat menambahkan tautan baru sesuai keinginan dan dibuat mengunakan Google Site, Google Sheet dan Google Apps Script
-                            </p>
-                        </div>
-
-                        {/* 2. NAVBAR (TOMBOL ADMIN/PREVIEW) - DI TENGAH */}
-                        <div className="mb-6 bg-white/5 backdrop-blur-md p-1 rounded-full border border-white/10 flex shadow-xl">
-                            {view === 'admin' ? (
-                                <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 text-sm bg-red-500/20 text-red-200 hover:bg-red-500 hover:text-white border border-red-500/30">
-                                    <LogOut /> <span>Keluar / Kunci</span>
-                                </button>
-                            ) : (
-                                <button onClick={handleAdminClick} className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 text-sm text-white/70 hover:text-white hover:bg-white/5">
-                                    <Lock /> <span>Admin</span>
-                                </button>
-                            )}
-                            
-                            <button onClick={() => setView('public')} className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 text-sm ${view === 'public' ? 'bg-white text-purple-900 font-bold shadow-lg' : 'text-white/70 hover:text-white'}`}>
-                                <LayoutGrid /> <span>Preview</span>
-                            </button>
-                        </div>
-
-                        {/* 3. STATUS MESSAGE */}
-                        {statusMsg && (
-                            <div className={`mb-4 text-center text-xs px-3 py-1 rounded-full inline-block backdrop-blur border w-full ${statusMsg.includes('⚠️') ? 'bg-yellow-500/20 border-yellow-500/50 text-yellow-200' : 'bg-white/10 border-white/10'}`}>
-                                {statusMsg}
-                            </div>
-                        )}
-
-                        {/* 4. CONTENT BODY (BAWAH) */}
-                        <div className="w-full animate-fade-in-up">
-                            {view === 'admin' ? (
-                                <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-2xl">
-                                    
-                                    {/* --- FITUR GANTI TEMA (BACKGROUND) --- */}
-                                    <div className="mb-6 pb-6 border-b border-white/10">
-                                        <h3 className="text-xs uppercase font-bold text-white/50 mb-3 flex items-center gap-2">
-                                            <Palette /> Ganti Background
-                                        </h3>
-                                        <div className="grid grid-cols-5 gap-3 justify-items-center">
-                                            {Object.keys(THEMES).map((key) => (
-                                                <button 
-                                                    key={key}
-                                                    onClick={() => setCurrentTheme(key)}
-                                                    className={`w-10 h-10 rounded-full border-2 transition-transform hover:scale-110 ${THEMES[key].preview} ${currentTheme === key ? 'ring-2 ring-white scale-110 shadow-lg' : 'border-white/20 opacity-70 hover:opacity-100'}`}
-                                                    title={`Tema: ${THEMES[key].name}`}
-                                                />
-                                            ))}
-                                        </div>
-                                    </div>
-                                    {/* ----------------------------------- */}
-
-                                    {/* HEADER KELOLA TAUTAN */}
-                                    <div className="flex items-center justify-between mb-4">
-                                        <h2 className="text-xl font-bold text-white">Kelola Tautan</h2>
-                                        <div className="flex items-center gap-2">
-                                            {/* TOMBOL BUKA DATABASE */}
-                                            <a 
-                                                href={sheetUrl} 
-                                                target="_blank" 
-                                                rel="noopener noreferrer"
-                                                className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 rounded text-xs text-green-300 flex items-center gap-1 transition-colors"
-                                            >
-                                                <SheetIcon /> <span className="hidden sm:inline">Database</span>
-                                            </a>
-
-                                            <div className="px-2 py-1 bg-purple-500/20 border border-purple-500/30 rounded text-xs text-purple-300 flex items-center gap-1">
-                                                <Unlock size={10} /> Terbuka
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <form onSubmit={addLink} className="space-y-4 mb-6">
-                                        <div className="space-y-1">
-                                            <label className="text-xs text-purple-200 uppercase font-semibold ml-1">Judul</label>
-                                            <input type="text" value={newLabel} onChange={(e) => setNewLabel(e.target.value)} placeholder="Nama Website" className="w-full bg-black/20 border border-white/10 rounded-xl py-2 px-4 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm" />
-                                        </div>
-                                        <div className="space-y-1">
-                                            <label className="text-xs text-purple-200 uppercase font-semibold ml-1">Link URL</label>
-                                            <div className="relative">
-                                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white/50"><LinkIcon /></div>
-                                                <input type="text" value={newUrl} onChange={(e) => setNewUrl(e.target.value)} placeholder="google.com" className="w-full bg-black/20 border border-white/10 rounded-xl py-2 pl-9 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm" />
-                                            </div>
-                                        </div>
-                                        <button type="submit" disabled={isLoading} className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold py-2 rounded-xl shadow-lg transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
-                                            {isLoading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : <><Plus /> Tambah & Simpan</>}
-                                        </button>
-                                    </form>
-
-                                    <div className="border-t border-white/10 pt-3">
-                                        <div className="space-y-2 max-h-48 overflow-y-auto no-scrollbar">
-                                            {links.map((link) => (
-                                                <div key={link.id} className="flex items-center justify-between bg-black/20 p-2 rounded-lg border border-white/5 group">
-                                                    <div className="flex flex-col overflow-hidden px-2">
-                                                        <span className="font-semibold text-sm truncate">{link.label}</span>
-                                                        <span className="text-[10px] text-white/40 truncate">{link.url}</span>
-                                                    </div>
-                                                    <button onClick={() => requestDelete(link.id)} className="p-1.5 text-white/40 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"><Trash2 /></button>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div>
-                                    {isLoading && links.length === 0 ? (
-                                        <div className="flex justify-center py-10"><div className="w-8 h-8 border-4 border-white/20 border-t-purple-500 rounded-full animate-spin"></div></div>
-                                    ) : (
-                                        <div className="grid gap-3">
-                                            {links.length === 0 && <p className="text-center text-white/40 italic">Belum ada tautan.</p>}
-                                            {links.map((link) => (
-                                                <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer" className={`relative group overflow-hidden bg-gradient-to-r ${link.color} p-[1px] rounded-xl shadow-lg hover:shadow-purple-500/20 transform transition-all duration-300 hover:-translate-y-1`}>
-                                                    <div className="bg-slate-900/95 group-hover:bg-slate-900/0 h-full w-full rounded-xl px-4 py-3 flex items-center justify-between transition-all duration-300">
-                                                        <span className="font-bold text-md text-white group-hover:drop-shadow-md pl-2">{link.label}</span>
-                                                        <ExternalLink />
-                                                    </div>
-                                                </a>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
+            <!-- BEL ALERT PANEL -->
+            <div id="buzzer-alert-container" class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 flex flex-col items-center justify-center min-h-[160px] text-center transition-all duration-300 relative overflow-hidden">
+                <!-- Background Glowing Pulse -->
+                <div id="buzzer-glow" class="absolute inset-0 opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+                
+                <div id="buzzer-state-idle" class="flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 rounded-full border-4 border-slate-700 flex items-center justify-center animate-pulse">
+                        <span class="w-4 h-4 bg-slate-500 rounded-full"></span>
                     </div>
-
-                    {/* Footer */}
-                    <div className="mt-8 z-10 text-center text-white text-sm font-semibold pb-4 tracking-wide shadow-black drop-shadow-md">
-                        Created by Wartam - SMPN 4 Majenang
-                    </div>
-
-                    {/* AUTH MODAL */}
-                    {showAuthModal && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowAuthModal(false)}></div>
-                            <div className={`bg-slate-800 border border-white/10 rounded-2xl p-6 w-full max-w-sm relative z-10 shadow-2xl modal-enter ${isPinError ? 'animate-shake' : ''}`}>
-                                <div className="flex flex-col items-center text-center">
-                                    <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 mb-4">
-                                        <Lock />
-                                    </div>
-                                    <h3 className="text-lg font-bold text-white mb-2">BUKA KUNCI</h3>
-                                    <p className="text-white/60 text-sm mb-4">Masukkan pasword untuk melanjutkan</p>
-                                    
-                                    <form onSubmit={verifyPin} className="w-full">
-                                        <input 
-                                            type="password" 
-                                            value={inputPin}
-                                            onChange={(e) => setInputPin(e.target.value)}
-                                            className="w-full bg-black/30 border border-white/20 rounded-xl py-3 px-4 text-center text-white text-lg tracking-widest focus:outline-none focus:border-purple-500 mb-4"
-                                            placeholder="••••••"
-                                            autoFocus
-                                        />
-                                        <button 
-                                            type="submit"
-                                            className="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold transition-colors"
-                                        >
-                                            Buka
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* DELETE MODAL */}
-                    {deleteId && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDeleteId(null)}></div>
-                            <div className="bg-slate-800 border border-white/10 rounded-2xl p-6 w-full max-w-sm relative z-10 shadow-2xl modal-enter">
-                                <div className="flex flex-col items-center text-center">
-                                    <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 mb-4">
-                                        <AlertTriangle />
-                                    </div>
-                                    <h3 className="text-lg font-bold text-white mb-2">Hapus Tautan?</h3>
-                                    <p className="text-white/60 text-sm mb-6">Apakah Anda yakin ingin menghapus tautan ini?</p>
-                                    <div className="flex gap-3 w-full">
-                                        <button onClick={() => setDeleteId(null)} className="flex-1 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white transition-colors text-sm font-semibold">Batal</button>
-                                        <button onClick={confirmDelete} className="flex-1 px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white transition-colors text-sm font-semibold shadow-lg shadow-red-500/20">Ya, Hapus</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                    <h3 class="text-xl font-bold text-slate-400 font-game tracking-wide">SISTEM BEL SIAP</h3>
+                    <p class="text-sm text-slate-500">Gunakan Shortcut Keyboard (Regu A: 1/A | Regu B: 2/S | Regu C: 3/D)</p>
                 </div>
-            );
+
+                <div id="buzzer-state-active" class="hidden flex flex-col items-center gap-3 z-10">
+                    <div class="animate-bounce p-3 rounded-full bg-red-600/20 border-2 border-red-500">
+                        <svg class="w-8 h-8 text-red-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                    </div>
+                    <!-- REVISED: Fixed double 'REGU' issue by outputting team name directly -->
+                    <h2 class="text-3xl font-extrabold text-white font-game tracking-wider"><span id="active-team-name" class="text-yellow-400">REGU A</span> Menjawab!</h2>
+                    <p class="text-sm text-yellow-300/80 font-semibold animate-pulse">Beri Penilaian Di Bawah:</p>
+                    
+                    <div class="flex flex-wrap gap-3 mt-2 justify-center">
+                        <button onclick="playSFX('correct'); addScoreFromBuzzer(10);" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-semibold flex items-center gap-1.5 shadow-lg shadow-emerald-600/20 transition-all">
+                            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Benar (+10)
+                        </button>
+                        <button onclick="playSFX('incorrect'); addScoreFromBuzzer(-5);" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-sm font-semibold flex items-center gap-1.5 shadow-lg shadow-rose-600/20 transition-all">
+                            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg> Salah (-5)
+                        </button>
+                        <button onclick="playSFX('incorrect'); addScoreFromBuzzer(0);" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm font-semibold flex items-center gap-1.5 border border-slate-700 transition-all">
+                            Salah (0)
+                        </button>
+                        <button onclick="resetBuzzer()" class="px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-sm font-semibold transition-all">
+                            Reset Bel [Spasi]
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEAMS DISPLAY -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- REGU A -->
+                <div id="team-card-0" class="bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-indigo-500/30 rounded-2xl overflow-hidden transition-all duration-300 hover:border-indigo-500/60 shadow-xl relative">
+                    <div class="bg-gradient-to-r from-indigo-900 to-slate-900 px-4 py-3 flex justify-between items-center border-b border-indigo-500/20">
+                        <h3 id="display-name-0" class="font-bold text-indigo-300 tracking-wide font-game text-xl">REGU A</h3>
+                        <span class="text-[10px] bg-indigo-500/20 text-indigo-300 font-bold px-2 py-0.5 rounded border border-indigo-500/30">TIM 1</span>
+                    </div>
+                    <div class="p-6 flex flex-col items-center">
+                        <div id="display-score-0" class="font-game text-6xl md:text-7xl font-extrabold text-white tracking-widest my-4 filter drop-shadow-[0_0_10px_rgba(99,102,241,0.5)]">
+                            0
+                        </div>
+                        <div class="flex items-center gap-2 mt-2 w-full">
+                            <button onclick="changeScore(0, -5)" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-red-400 font-semibold rounded-lg text-sm transition-colors">-5</button>
+                            <button onclick="setScoreToZero(0)" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 font-semibold rounded-lg text-sm transition-colors">0</button>
+                            <button onclick="changeScore(0, 10)" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-emerald-400 font-semibold rounded-lg text-sm transition-colors">+10</button>
+                        </div>
+                        <button onclick="triggerBuzz(0)" class="w-full mt-4 py-2.5 bg-indigo-600/20 hover:bg-indigo-600 text-indigo-400 hover:text-white border border-indigo-500/30 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-indigo-500 rounded-full"></span> Tekan Bel (A)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- REGU B -->
+                <div id="team-card-1" class="bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-emerald-500/30 rounded-2xl overflow-hidden transition-all duration-300 hover:border-emerald-500/60 shadow-xl relative">
+                    <div class="bg-gradient-to-r from-emerald-900 to-slate-900 px-4 py-3 flex justify-between items-center border-b border-emerald-500/20">
+                        <h3 id="display-name-1" class="font-bold text-emerald-300 tracking-wide font-game text-xl">REGU B</h3>
+                        <span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded border border-emerald-500/30">TIM 2</span>
+                    </div>
+                    <div class="p-6 flex flex-col items-center">
+                        <div id="display-score-1" class="font-game text-6xl md:text-7xl font-extrabold text-white tracking-widest my-4 filter drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]">
+                            0
+                        </div>
+                        <div class="flex items-center gap-2 mt-2 w-full">
+                            <button onclick="changeScore(1, -5)" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-red-400 font-semibold rounded-lg text-sm transition-colors">-5</button>
+                            <button onclick="setScoreToZero(1)" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 font-semibold rounded-lg text-sm transition-colors">0</button>
+                            <button onclick="changeScore(1, 10)" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-emerald-400 font-semibold rounded-lg text-sm transition-colors">+10</button>
+                        </div>
+                        <button onclick="triggerBuzz(1)" class="w-full mt-4 py-2.5 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white border border-emerald-500/30 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span> Tekan Bel (S)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- REGU C -->
+                <div id="team-card-2" class="bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-rose-500/30 rounded-2xl overflow-hidden transition-all duration-300 hover:border-rose-500/60 shadow-xl relative">
+                    <div class="bg-gradient-to-r from-rose-900 to-slate-900 px-4 py-3 flex justify-between items-center border-b border-rose-500/20">
+                        <h3 id="display-name-2" class="font-bold text-rose-300 tracking-wide font-game text-xl">REGU C</h3>
+                        <span class="text-[10px] bg-rose-500/20 text-rose-300 font-bold px-2 py-0.5 rounded border border-rose-500/30">TIM 3</span>
+                    </div>
+                    <div class="p-6 flex flex-col items-center">
+                        <div id="display-score-2" class="font-game text-6xl md:text-7xl font-extrabold text-white tracking-widest my-4 filter drop-shadow-[0_0_10px_rgba(244,63,94,0.5)]">
+                            0
+                        </div>
+                        <div class="flex items-center gap-2 mt-2 w-full">
+                            <button onclick="changeScore(2, -5)" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-red-400 font-semibold rounded-lg text-sm transition-colors">-5</button>
+                            <button onclick="setScoreToZero(2)" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 font-semibold rounded-lg text-sm transition-colors">0</button>
+                            <button onclick="changeScore(2, 10)" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-rose-400 font-semibold rounded-lg text-sm transition-colors">+10</button>
+                        </div>
+                        <button onclick="triggerBuzz(2)" class="w-full mt-4 py-2.5 bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/30 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-rose-500 rounded-full"></span> Tekan Bel (D)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GOOGLE SHEETS SYNC CONTROL PANEL -->
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 flex flex-col gap-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <h3 class="font-bold font-game tracking-wider text-slate-200">INTEGRASI GOOGLE SHEETS</h3>
+                    </div>
+                    <span class="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-mono font-bold">API ACTIVE</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- API Script URL Input -->
+                    <div class="md:col-span-2 flex flex-col gap-1.5">
+                        <label class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">URL Deployment Web App Google Apps Script</label>
+                        <input type="text" id="sheets-url-input" placeholder="https://script.google.com/macros/s/.../exec" class="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 text-slate-200 w-full font-mono">
+                    </div>
+                    <!-- Auto Sync Option -->
+                    <div class="flex flex-col justify-end">
+                        <label class="inline-flex items-center cursor-pointer bg-slate-950/50 hover:bg-slate-950 border border-slate-800 p-2.5 rounded-lg transition-colors">
+                            <input type="checkbox" id="auto-sync-checkbox" class="sr-only peer" checked>
+                            <div class="relative w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 peer-checked:after:bg-white"></div>
+                            <span class="ms-3 text-xs font-semibold text-slate-300">Auto-Sync Skor</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-2.5 mt-2 pt-3 border-t border-slate-800/50">
+                    <button onclick="testSheetsConnection()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-200 flex items-center gap-1.5 transition-colors">
+                        <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Tes Koneksi
+                    </button>
+                    <button onclick="uploadScoresToSheets()" class="px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/30 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg> Upload Skor Saat Ini
+                    </button>
+                    <button onclick="downloadScoresFromSheets()" class="px-4 py-2 bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-500/30 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Ambil Data Sheet (Import)
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- PANEL JURI / KONTROL DETIL -->
+        <div class="lg:col-span-1 flex flex-col gap-6">
+            
+            <!-- PANEL KONTROL MODERATOR -->
+            <div class="bg-slate-900/85 border border-slate-800 rounded-2xl p-5 flex flex-col gap-4 shadow-xl">
+                <h2 class="text-lg font-bold font-game tracking-wider text-slate-200 border-b border-slate-800 pb-2 flex items-center justify-between">
+                    <span>PANEL JURI</span>
+                    <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded uppercase font-sans">Settings</span>
+                </h2>
+
+                <!-- Custom Score Inputs -->
+                <div class="flex flex-col gap-3">
+                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Atur Nama & Nilai</h4>
+                    
+                    <!-- Regu A Setting -->
+                    <div class="p-3 bg-slate-950/60 rounded-xl border border-indigo-500/20 flex flex-col gap-2">
+                        <input type="text" id="input-name-0" oninput="updateTeamName(0, this.value)" value="REGU A" class="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-sm font-semibold text-indigo-300 focus:outline-none focus:border-indigo-500">
+                        <div class="flex items-center gap-1">
+                            <input type="number" id="input-score-0" value="0" class="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-xs w-full focus:outline-none text-slate-300">
+                            <button onclick="applyCustomScore(0)" class="px-2 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-semibold transition-colors">Set</button>
+                        </div>
+                    </div>
+
+                    <!-- Regu B Setting -->
+                    <div class="p-3 bg-slate-950/60 rounded-xl border border-emerald-500/20 flex flex-col gap-2">
+                        <input type="text" id="input-name-1" oninput="updateTeamName(1, this.value)" value="REGU B" class="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-sm font-semibold text-emerald-300 focus:outline-none focus:border-emerald-500">
+                        <div class="flex items-center gap-1">
+                            <input type="number" id="input-score-1" value="0" class="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-xs w-full focus:outline-none text-slate-300">
+                            <button onclick="applyCustomScore(1)" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-semibold transition-colors">Set</button>
+                        </div>
+                    </div>
+
+                    <!-- Regu C Setting -->
+                    <div class="p-3 bg-slate-950/60 rounded-xl border border-rose-500/20 flex flex-col gap-2">
+                        <input type="text" id="input-name-2" oninput="updateTeamName(2, this.value)" value="REGU C" class="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-sm font-semibold text-rose-300 focus:outline-none focus:border-rose-500">
+                        <div class="flex items-center gap-1">
+                            <input type="number" id="input-score-2" value="0" class="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-xs w-full focus:outline-none text-slate-300">
+                            <button onclick="applyCustomScore(2)" class="px-2 py-1 bg-rose-600 hover:bg-rose-500 text-white rounded text-xs font-semibold transition-colors">Set</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timer Settings -->
+                <div class="flex flex-col gap-2 pt-2 border-t border-slate-800">
+                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Durasi Timer</h4>
+                    
+                    <!-- Quick Set Grid -->
+                    <div class="grid grid-cols-3 gap-1.5 mb-2">
+                        <button onclick="setTimerDuration(15)" class="py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded font-semibold text-slate-300 transition-colors">15 Detik</button>
+                        <button onclick="setTimerDuration(30)" class="py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded font-semibold text-slate-300 transition-colors">30 Detik</button>
+                        <button onclick="setTimerDuration(60)" class="py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded font-semibold text-slate-300 transition-colors">60 Detik</button>
+                    </div>
+
+                    <!-- Manual Custom Time Inputs -->
+                    <div class="flex gap-1 items-center bg-slate-950/50 p-2 rounded-lg border border-slate-800/80">
+                        <div class="flex items-center gap-1">
+                            <input type="number" id="custom-timer-min" min="0" max="59" placeholder="Min" class="w-11 bg-slate-900 border border-slate-800 rounded px-1.5 py-1 text-xs text-center text-slate-300 focus:outline-none focus:border-blue-500 font-mono">
+                            <span class="text-xs text-slate-500 font-bold">:</span>
+                            <input type="number" id="custom-timer-sec" min="0" max="59" placeholder="Det" class="w-11 bg-slate-900 border border-slate-800 rounded px-1.5 py-1 text-xs text-center text-slate-300 focus:outline-none focus:border-blue-500 font-mono">
+                        </div>
+                        <button onclick="applyCustomTimer()" class="flex-1 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs font-bold transition-colors">
+                            Set Waktu
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Reset All -->
+                <button onclick="openResetModal()" class="mt-2 w-full py-2.5 bg-red-950/30 hover:bg-red-900/60 border border-red-800 text-red-300 hover:text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg> RESET PERTANDINGAN
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-4 px-6 text-center text-xs text-slate-500">
+        <p>&copy; 2026 Live Skor System • Terintegrasi Google Sheets Cloud • Tekan <kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 font-mono text-slate-400 text-[10px]">F11</kbd> untuk Layar Penuh</p>
+    </footer>
+
+    <!-- CUSTOM CONFIRMATION MODAL -->
+    <div id="custom-modal-reset" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-slate-900 border border-slate-800 max-w-md w-full rounded-2xl p-6 shadow-2xl flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center gap-3 text-red-500">
+                <div class="p-2.5 bg-red-500/10 rounded-xl">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                </div>
+                <h3 class="text-lg font-bold font-game tracking-wider uppercase">RESET PERTANDINGAN?</h3>
+            </div>
+            <p class="text-sm text-slate-300 leading-relaxed">Tindakan ini akan mengosongkan seluruh poin/skor regu saat ini dan mengatur ulang status bel serta timer kembali ke keadaan awal.</p>
+            <div class="flex justify-end gap-2.5 mt-2">
+                <button onclick="closeResetModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold transition-colors">Batal</button>
+                <button onclick="confirmResetMatch()" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-xs font-semibold transition-colors">Ya, Reset Sekarang</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM NOTIFICATION MODAL -->
+    <div id="custom-modal-notif" class="hidden fixed bottom-6 right-6 z-50 p-1">
+        <div class="bg-slate-900/95 border border-slate-800 rounded-xl px-4 py-3 shadow-2xl flex items-center gap-3 max-w-sm border-l-4" id="notif-accent-border">
+            <div id="notif-icon-container" class="p-1.5 rounded-lg">
+                <!-- Dynamic Icon Injection -->
+            </div>
+            <div>
+                <h4 id="notif-title" class="text-xs font-bold font-game tracking-wider uppercase">Notifikasi</h4>
+                <p id="notif-message" class="text-xs text-slate-300 mt-0.5">Pesan di sini</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS SCRIPT LOGIC -->
+    <script>
+        // --- State Management ---
+        const teams = [
+            { name: "REGU A", score: 0, colorClass: "indigo", glowClass: "neon-blue", bgGlow: "rgba(99,102,241,0.2)" },
+            { name: "REGU B", score: 0, colorClass: "emerald", glowClass: "neon-green", bgGlow: "rgba(16,185,129,0.2)" },
+            { name: "REGU C", score: 0, colorClass: "rose", glowClass: "neon-rose", bgGlow: "rgba(244,63,94,0.2)" }
+        ];
+
+        let activeBuzzerIndex = null;
+        let buzzerLocked = false;
+
+        // Timer Variables
+        let timerSeconds = 30;
+        let originalDuration = 30;
+        let timerInterval = null;
+
+        // Audio System
+        let audioCtx = null;
+        let masterGain = null;
+        let currentVolume = 0.5;
+
+        // --- Audio Functions ---
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                masterGain = audioCtx.createGain();
+                masterGain.gain.setValueAtTime(currentVolume, audioCtx.currentTime);
+                masterGain.connect(audioCtx.destination);
+            }
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        // Custom synthesizer with Web Audio API
+        function playSFX(type) {
+            initAudio();
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(masterGain);
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'ding') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(330, now);
+                osc.frequency.exponentialRampToValueAtTime(660, now + 0.1);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.start(now);
+                osc.stop(now + 0.4);
+            } 
+            else if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.1);
+                osc.frequency.setValueAtTime(783.99, now + 0.2);
+                osc.frequency.setValueAtTime(1046.50, now + 0.3);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+                osc.start(now);
+                osc.stop(now + 0.6);
+            } 
+            else if (type === 'incorrect') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.linearRampToValueAtTime(110, now + 0.4);
+                gain.gain.setValueAtTime(0.4, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                osc.start(now);
+                osc.stop(now + 0.5);
+            }
+            else if (type === 'beep') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, now);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            }
+            else if (type === 'alarm') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.linearRampToValueAtTime(880, now + 0.25);
+                osc.frequency.linearRampToValueAtTime(440, now + 0.5);
+                osc.frequency.linearRampToValueAtTime(880, now + 0.75);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 1.0);
+                osc.start(now);
+                osc.stop(now + 1.0);
+            }
+        }
+
+        // --- Custom Dialog Modals ---
+        function showNotification(title, message, type = 'info') {
+            const notif = document.getElementById('custom-modal-notif');
+            const borderEl = document.getElementById('notif-accent-border');
+            const iconEl = document.getElementById('notif-icon-container');
+            
+            document.getElementById('notif-title').innerText = title;
+            document.getElementById('notif-message').innerText = message;
+
+            if (type === 'success') {
+                borderEl.className = "bg-slate-900/95 border-slate-800 rounded-xl px-4 py-3 shadow-2xl flex items-center gap-3 max-w-sm border-l-4 border-l-emerald-500";
+                iconEl.className = "p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400";
+                iconEl.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>`;
+            } else if (type === 'error') {
+                borderEl.className = "bg-slate-900/95 border-slate-800 rounded-xl px-4 py-3 shadow-2xl flex items-center gap-3 max-w-sm border-l-4 border-l-rose-500";
+                iconEl.className = "p-1.5 rounded-lg bg-rose-500/10 text-rose-400";
+                iconEl.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>`;
+            } else {
+                borderEl.className = "bg-slate-900/95 border-slate-800 rounded-xl px-4 py-3 shadow-2xl flex items-center gap-3 max-w-sm border-l-4 border-l-blue-500";
+                iconEl.className = "p-1.5 rounded-lg bg-blue-500/10 text-blue-400";
+                iconEl.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+            }
+
+            notif.classList.remove('hidden');
+            
+            setTimeout(() => {
+                notif.classList.add('hidden');
+            }, 4500);
+        }
+
+        function openResetModal() {
+            document.getElementById('custom-modal-reset').classList.remove('hidden');
+        }
+
+        function closeResetModal() {
+            document.getElementById('custom-modal-reset').classList.add('hidden');
+        }
+
+        function confirmResetMatch() {
+            teams.forEach((team, index) => {
+                team.score = 0;
+                document.getElementById(`display-score-${index}`).innerText = 0;
+                document.getElementById(`input-score-${index}`).value = 0;
+            });
+            resetBuzzer();
+            resetTimer();
+            closeResetModal();
+            showNotification("Match Reset", "Data skor dan status telah di-reset sepenuhnya.", "success");
+            
+            checkAndTriggerAutoSync();
+        }
+
+        // --- Core Quiz Operations ---
+        function updateTeamName(index, name) {
+            const cleanName = name.trim().toUpperCase() || `REGU ${String.fromCharCode(65 + index)}`;
+            teams[index].name = cleanName;
+            document.getElementById(`display-name-${index}`).innerText = cleanName;
+            
+            if (activeBuzzerIndex === index) {
+                document.getElementById('active-team-name').innerText = cleanName;
+            }
+        }
+
+        function changeScore(index, value) {
+            teams[index].score += value;
+            document.getElementById(`display-score-${index}`).innerText = teams[index].score;
+            document.getElementById(`input-score-${index}`).value = teams[index].score;
+            
+            const card = document.getElementById(`team-card-${index}`);
+            card.classList.add('scale-105', 'shadow-2xl');
+            setTimeout(() => {
+                card.classList.remove('scale-105', 'shadow-2xl');
+            }, 300);
+
+            checkAndTriggerAutoSync();
+        }
+
+        function setScoreToZero(index) {
+            teams[index].score = 0;
+            document.getElementById(`display-score-${index}`).innerText = 0;
+            document.getElementById(`input-score-${index}`).value = 0;
+            
+            const card = document.getElementById(`team-card-${index}`);
+            card.classList.add('scale-95');
+            setTimeout(() => {
+                card.classList.remove('scale-95');
+            }, 200);
+
+            showNotification("Skor Reset", `Skor ${teams[index].name} disetel kembali ke 0.`, "info");
+            checkAndTriggerAutoSync();
+        }
+
+        function applyCustomScore(index) {
+            const rawVal = parseInt(document.getElementById(`input-score-${index}`).value);
+            const val = isNaN(rawVal) ? 0 : rawVal;
+            teams[index].score = val;
+            document.getElementById(`display-score-${index}`).innerText = val;
+            
+            showNotification("Skor Diubah", `${teams[index].name} disetel menjadi ${val} poin.`, "info");
+            checkAndTriggerAutoSync();
+        }
+
+        function triggerBuzz(index) {
+            if (buzzerLocked) return;
+
+            buzzerLocked = true;
+            activeBuzzerIndex = index;
+            playSFX('ding');
+            pauseTimer();
+
+            const activeTeam = teams[index];
+            const alertBox = document.getElementById('buzzer-alert-container');
+            const glowEl = document.getElementById('buzzer-glow');
+            
+            alertBox.className = `bg-slate-900/60 border-2 border-${activeTeam.colorClass}-500 rounded-2xl p-6 flex flex-col items-center justify-center min-h-[160px] text-center transition-all duration-300 relative overflow-hidden`;
+            
+            glowEl.style.backgroundColor = activeTeam.bgGlow;
+            glowEl.style.boxShadow = `inset 0 0 40px ${activeTeam.bgGlow}`;
+            glowEl.classList.remove('opacity-0');
+            glowEl.classList.add('opacity-100');
+
+            document.getElementById('active-team-name').innerText = activeTeam.name;
+            document.getElementById('active-team-name').className = `text-${activeTeam.colorClass}-400 font-extrabold`;
+            document.getElementById('buzzer-state-idle').classList.add('hidden');
+            document.getElementById('buzzer-state-active').classList.remove('hidden');
+
+            document.getElementById(`team-card-${index}`).classList.add(activeTeam.glowClass, 'border-' + activeTeam.colorClass + '-500');
+        }
+
+        function resetBuzzer() {
+            if (activeBuzzerIndex !== null) {
+                const prevTeam = teams[activeBuzzerIndex];
+                document.getElementById(`team-card-${activeBuzzerIndex}`).classList.remove(prevTeam.glowClass, 'border-' + prevTeam.colorClass + '-500');
+            }
+
+            activeBuzzerIndex = null;
+            buzzerLocked = false;
+
+            const alertBox = document.getElementById('buzzer-alert-container');
+            alertBox.className = 'bg-slate-900/60 border border-slate-800 rounded-2xl p-6 flex flex-col items-center justify-center min-h-[160px] text-center transition-all duration-300 relative overflow-hidden';
+            
+            const glowEl = document.getElementById('buzzer-glow');
+            glowEl.classList.remove('opacity-100');
+            glowEl.classList.add('opacity-0');
+
+            document.getElementById('buzzer-state-idle').classList.remove('hidden');
+            document.getElementById('buzzer-state-active').classList.add('hidden');
+        }
+
+        function addScoreFromBuzzer(pts) {
+            if (activeBuzzerIndex !== null) {
+                changeScore(activeBuzzerIndex, pts);
+                resetBuzzer();
+            }
+        }
+
+        // --- Keyboard Shortcuts Bindings ---
+        document.addEventListener('keydown', function(event) {
+            if (document.activeElement.tagName === 'INPUT') return;
+
+            const key = event.key.toLowerCase();
+
+            if (key === '1' || key === 'a') {
+                triggerBuzz(0);
+            }
+            else if (key === '2' || key === 's') {
+                triggerBuzz(1);
+            }
+            else if (key === '3' || key === 'd') {
+                triggerBuzz(2);
+            }
+            else if (key === ' ' || event.code === 'Space') {
+                event.preventDefault();
+                resetBuzzer();
+            }
+        });
+
+        // --- TIMER LOGIC ---
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerSeconds / 60);
+            const seconds = timerSeconds % 60;
+            const strMinutes = String(minutes).padStart(2, '0');
+            const strSeconds = String(seconds).padStart(2, '0');
+            document.getElementById('timer-display').innerText = `${strMinutes}:${strSeconds}`;
+            
+            if (timerSeconds <= 5) {
+                document.getElementById('timer-display').className = "font-game text-3xl font-bold text-rose-500 tracking-wider animate-pulse";
+            } else if (timerSeconds <= 10) {
+                document.getElementById('timer-display').className = "font-game text-3xl font-bold text-yellow-500 tracking-wider";
+            } else {
+                document.getElementById('timer-display').className = "font-game text-3xl font-bold text-blue-400 tracking-wider";
+            }
+        }
+
+        function startTimer() {
+            initAudio();
+            if (timerInterval) return;
+
+            timerInterval = setInterval(() => {
+                if (timerSeconds > 0) {
+                    timerSeconds--;
+                    updateTimerDisplay();
+                    
+                    if (timerSeconds <= 5 && timerSeconds > 0) {
+                        playSFX('beep');
+                    }
+
+                    if (timerSeconds === 0) {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                        playSFX('alarm');
+                    }
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timerSeconds = originalDuration;
+            updateTimerDisplay();
+        }
+
+        function setTimerDuration(seconds) {
+            pauseTimer();
+            originalDuration = seconds;
+            timerSeconds = seconds;
+            updateTimerDisplay();
+        }
+
+        function applyCustomTimer() {
+            const minInput = document.getElementById('custom-timer-min');
+            const secInput = document.getElementById('custom-timer-sec');
+            
+            const minutes = parseInt(minInput.value) || 0;
+            const seconds = parseInt(secInput.value) || 0;
+            
+            const totalSeconds = (minutes * 60) + seconds;
+            
+            if (totalSeconds <= 0) {
+                showNotification("Input Salah", "Harap masukkan durasi waktu yang valid (minimal 1 detik).", "error");
+                return;
+            }
+            
+            setTimerDuration(totalSeconds);
+            showNotification("Waktu Diatur", `Durasi disetel ke ${minutes}m ${seconds}s.`, "success");
+        }
+
+        // --- GOOGLE SHEETS INTEGRATION LOGIC ---
+
+        function getSheetsURL() {
+            const url = document.getElementById('sheets-url-input').value.trim();
+            if (url) {
+                localStorage.setItem('lcc_sheets_url', url);
+            }
+            return url;
+        }
+
+        function updateSyncIndicator(status) {
+            const dot = document.getElementById('sync-status-dot');
+            const label = document.getElementById('sync-status-text');
+
+            if (status === 'connected') {
+                dot.className = "w-2.5 h-2.5 bg-emerald-500 animate-pulse rounded-full";
+                label.innerText = "Terhubung";
+                label.className = "text-xs font-semibold text-emerald-400";
+            } else if (status === 'syncing') {
+                dot.className = "w-2.5 h-2.5 bg-amber-500 animate-ping rounded-full";
+                label.innerText = "Sinkronisasi...";
+                label.className = "text-xs font-semibold text-amber-400";
+            } else if (status === 'error') {
+                dot.className = "w-2.5 h-2.5 bg-rose-500 rounded-full";
+                label.innerText = "Gagal Sambung";
+                label.className = "text-xs font-semibold text-rose-500";
+            } else {
+                dot.className = "w-2.5 h-2.5 bg-gray-500 rounded-full";
+                label.innerText = "Belum Terhubung";
+                label.className = "text-xs font-semibold text-slate-400";
+            }
+        }
+
+        function checkAndTriggerAutoSync() {
+            const isAutoSync = document.getElementById('auto-sync-checkbox').checked;
+            if (isAutoSync && getSheetsURL()) {
+                uploadScoresToSheets(true); // silent sync
+            }
+        }
+
+        async function testSheetsConnection() {
+            const url = getSheetsURL();
+            if (!url) {
+                showNotification("Konfigurasi Kosong", "Harap masukkan URL Google Apps Script terlebih dahulu.", "error");
+                return;
+            }
+
+            updateSyncIndicator('syncing');
+            try {
+                const response = await fetch(`${url}?action=ping`, { method: 'GET' });
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.status === 'pong' || data.status === 'success') {
+                        updateSyncIndicator('connected');
+                        showNotification("Koneksi Berhasil", "Aplikasi berhasil terhubung ke Google Sheets Anda!", "success");
+                    } else {
+                        throw new Error("Invalid response status");
+                    }
+                } else {
+                    throw new Error("Bad network response");
+                }
+            } catch (error) {
+                console.error("Connection failed: ", error);
+                updateSyncIndicator('error');
+                showNotification("Koneksi Gagal", "Pastikan URL Apps Script benar dan konfigurasi izin diatur ke 'Anyone'.", "error");
+            }
+        }
+
+        async function uploadScoresToSheets(silent = false) {
+            const url = getSheetsURL();
+            if (!url) {
+                if (!silent) showNotification("Sync Gagal", "URL Google Sheets kosong.", "error");
+                return;
+            }
+
+            if (!silent) updateSyncIndicator('syncing');
+
+            const payload = {
+                action: 'updateScores',
+                teams: teams.map(t => ({ name: t.name, score: t.score }))
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    updateSyncIndicator('connected');
+                    if (!silent) showNotification("Data Terkirim", "Skor berhasil diperbarui di Google Sheets!", "success");
+                } else {
+                    throw new Error("Fail response");
+                }
+            } catch (error) {
+                console.error("Upload failed: ", error);
+                updateSyncIndicator('error');
+                if (!silent) showNotification("Gagal Mengirim", "Gagal memperbarui data di Google Sheets.", "error");
+            }
+        }
+
+        async function downloadScoresFromSheets() {
+            const url = getSheetsURL();
+            if (!url) {
+                showNotification("Gagal Ambil Data", "Harap masukkan URL Google Sheets Anda.", "error");
+                return;
+            }
+
+            updateSyncIndicator('syncing');
+            try {
+                const response = await fetch(`${url}?action=getScores`, { method: 'GET' });
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data && Array.isArray(data)) {
+                        data.forEach((row, index) => {
+                            if (index < teams.length) {
+                                if (row.name) {
+                                    teams[index].name = row.name;
+                                    document.getElementById(`input-name-${index}`).value = row.name;
+                                    document.getElementById(`display-name-${index}`).innerText = row.name;
+                                }
+                                if (row.score !== undefined) {
+                                    teams[index].score = parseInt(row.score) || 0;
+                                    document.getElementById(`input-score-${index}`).value = teams[index].score;
+                                    document.getElementById(`display-score-${index}`).innerText = teams[index].score;
+                                }
+                            }
+                        });
+                        updateSyncIndicator('connected');
+                        showNotification("Impor Berhasil", "Nama & skor regu berhasil diunduh dari Google Sheet.", "success");
+                    } else {
+                        throw new Error("Data format invalid");
+                    }
+                } else {
+                    throw new Error("HTTP error");
+                }
+            } catch (error) {
+                console.error("Download failed: ", error);
+                updateSyncIndicator('error');
+                showNotification("Gagal Sinkronisasi", "Gagal mengunduh data. Pastikan format kolom Sheet Anda benar.", "error");
+            }
+        }
+
+        window.onload = function() {
+            updateTimerDisplay();
+            
+            const savedUrl = localStorage.getItem('lcc_sheets_url');
+            if (savedUrl) {
+                document.getElementById('sheets-url-input').value = savedUrl;
+                updateSyncIndicator('connected');
+            }
+
+            for (let i = 0; i < 3; i++) {
+                document.getElementById(`input-name-${i}`).value = teams[i].name;
+                document.getElementById(`input-score-${i}`).value = teams[i].score;
+            }
+        }
     </script>
 </body>
 </html>
