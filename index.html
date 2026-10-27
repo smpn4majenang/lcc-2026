@@ -38,6 +38,9 @@
   label{font-weight:700;display:block;margin-bottom:5px;font-size:.92rem}
   input[type=text],input[type=number],select{width:100%;font:inherit;border:1px solid #334155;border-radius:10px;padding:9px 11px;background:#0b1526;color:var(--ink)}
   .field{margin:8px 0}
+  .timer-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:nowrap;margin:14px 0 8px}
+  .timer-row .field{flex:1;min-width:0;margin:0}
+  .timer-row .btn{flex-shrink:0;white-space:nowrap}
   .kecil{font-size:.88rem;color:var(--muted)}
   .footer{text-align:center;color:var(--muted);font-size:.85rem;padding:18px}
   kbd{background:#1e293b;border:1px solid #475569;border-bottom-width:3px;border-radius:6px;padding:1px 7px;font-family:inherit}
@@ -66,14 +69,10 @@
       <div id="tampilTimer">00:30</div>
       <div class="status"><span class="dot" id="titikSheets"></span><span id="teksSheets">Sheets: Belum Terhubung</span></div>
     </div>
-    <!-- Tombol preset durasi disembunyikan (atas permintaan Wartam); kustom menit/detik tetap dipakai. -->
-    <h3 style="margin:20px 0 8px;display:none">Durasi Timer</h3>
-    <div class="btn-row" style="justify-content:flex-start;display:none">
+    <div class="timer-row">
       <button class="btn abu" data-detik="15" type="button">15 Detik</button>
       <button class="btn abu" data-detik="30" type="button">30 Detik</button>
       <button class="btn abu" data-detik="60" type="button">60 Detik</button>
-    </div>
-    <div class="grid2">
       <div class="field"><label for="timerMenit">Kustom (menit)</label><input id="timerMenit" type="number" min="0" value="0"></div>
       <div class="field"><label for="timerDetik">Kustom (detik)</label><input id="timerDetik" type="number" min="0" max="59" value="30"></div>
     </div>
@@ -89,7 +88,7 @@
 
   <section class="cards" id="kartuRegu"></section>
 
-  <p class="kecil" style="text-align:center;margin:6px 0">Shortcut bel: Regu A <kbd>1</kbd> / <kbd>A</kbd> &nbsp;|&nbsp; Regu B <kbd>2</kbd> / <kbd>S</kbd> &nbsp;|&nbsp; Regu C <kbd>3</kbd> / <kbd>D</kbd> &nbsp;|&nbsp; Reset bel <kbd>R</kbd></p>
+  <p class="kecil" style="text-align:center;margin:6px 0;display:none">Shortcut bel: Regu A <kbd>1</kbd> / <kbd>A</kbd> &nbsp;|&nbsp; Regu B <kbd>2</kbd> / <kbd>S</kbd> &nbsp;|&nbsp; Regu C <kbd>3</kbd> / <kbd>D</kbd> &nbsp;|&nbsp; Reset bel <kbd>R</kbd></p>
 
   <section class="panel">
     <h2>PANEL JURI</h2>
