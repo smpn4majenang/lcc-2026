@@ -62,12 +62,13 @@
 
   <div class="bel-status" id="statusBel" style="display:none">SISTEM BEL SIAP &mdash; Tekan bel regu atau tombol keyboard di bawah</div>
 
+  <section class="cards" id="kartuRegu"></section>
+
   <section class="panel">
-    <h2>DURASI TIMER</h2>
     <div class="timer-box">
       <div class="label">WAKTU SISA</div>
       <div id="tampilTimer">00:30</div>
-      <div class="status"><span class="dot" id="titikSheets"></span><span id="teksSheets">Sheets: Belum Terhubung</span></div>
+      <div class="status" style="display:none"><span class="dot" id="titikSheets"></span><span id="teksSheets">Sheets: Belum Terhubung</span></div>
     </div>
     <div class="timer-row">
       <button class="btn abu" data-detik="15" type="button">15 Detik</button>
@@ -84,9 +85,6 @@
     </div>
     <p class="kecil" id="pesanTimer"></p>
   </section>
-
-
-  <section class="cards" id="kartuRegu"></section>
 
   <p class="kecil" style="text-align:center;margin:6px 0;display:none">Shortcut bel: Regu A <kbd>1</kbd> / <kbd>A</kbd> &nbsp;|&nbsp; Regu B <kbd>2</kbd> / <kbd>S</kbd> &nbsp;|&nbsp; Regu C <kbd>3</kbd> / <kbd>D</kbd> &nbsp;|&nbsp; Reset bel <kbd>R</kbd></p>
 
