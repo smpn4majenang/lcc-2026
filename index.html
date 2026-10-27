@@ -66,8 +66,9 @@
       <div id="tampilTimer">00:30</div>
       <div class="status"><span class="dot" id="titikSheets"></span><span id="teksSheets">Sheets: Belum Terhubung</span></div>
     </div>
-    <h3 style="margin:20px 0 8px">Durasi Timer</h3>
-    <div class="btn-row" style="justify-content:flex-start">
+    <!-- Tombol preset durasi disembunyikan (atas permintaan Wartam); kustom menit/detik tetap dipakai. -->
+    <h3 style="margin:20px 0 8px;display:none">Durasi Timer</h3>
+    <div class="btn-row" style="justify-content:flex-start;display:none">
       <button class="btn abu" data-detik="15" type="button">15 Detik</button>
       <button class="btn abu" data-detik="30" type="button">30 Detik</button>
       <button class="btn abu" data-detik="60" type="button">60 Detik</button>
@@ -85,9 +86,10 @@
     <p class="kecil" id="pesanTimer"></p>
   </section>
 
-  <p class="kecil" style="text-align:center;margin:6px 0">Shortcut bel: Regu A <kbd>1</kbd> / <kbd>A</kbd> &nbsp;|&nbsp; Regu B <kbd>2</kbd> / <kbd>S</kbd> &nbsp;|&nbsp; Regu C <kbd>3</kbd> / <kbd>D</kbd> &nbsp;|&nbsp; Reset bel <kbd>R</kbd></p>
 
   <section class="cards" id="kartuRegu"></section>
+
+  <p class="kecil" style="text-align:center;margin:6px 0">Shortcut bel: Regu A <kbd>1</kbd> / <kbd>A</kbd> &nbsp;|&nbsp; Regu B <kbd>2</kbd> / <kbd>S</kbd> &nbsp;|&nbsp; Regu C <kbd>3</kbd> / <kbd>D</kbd> &nbsp;|&nbsp; Reset bel <kbd>R</kbd></p>
 
   <section class="panel">
     <h2>PANEL JURI</h2>
