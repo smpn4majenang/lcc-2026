@@ -31,6 +31,7 @@
   .btn:hover{filter:brightness(1.1)} .btn:disabled{opacity:.45;cursor:not-allowed}
   .btn.merah{background:var(--red)} .btn.hijau{background:var(--green)} .btn.kuning{background:var(--amber);color:#111} .btn.abu{background:#334155}
   .btn-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:6px 0}
+  .btn-row input[type=number]{width:auto;flex:1;min-width:0}
   .panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:16px}
   .panel h2{margin:0 0 12px}
   .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
@@ -179,6 +180,10 @@
           "<button class=\"btn\" data-aksi=\"tambah\" data-i=\"" + i + "\" type=\"button\">+10</button>" +
           "<button class=\"btn abu\" data-aksi=\"nol\" data-i=\"" + i + "\" type=\"button\">0</button>" +
           "<button class=\"btn merah\" data-aksi=\"kurang\" data-i=\"" + i + "\" type=\"button\">-5</button>" +
+        "</div> +
+        "<div class=\"btn-row\">" +
+          "<input type=\"number\" data-skor-custom=\"" + i + "\" placeholder=\"Skor custom\" aria-label=\"Skor custom\">" +
+          "<button class=\"btn\" data-aksi=\"atur\" data-i=\"" + i + "\" type=\"button\">Atur</button>" +
         "</div>";
       wadah.appendChild(div);
     });
@@ -189,6 +194,12 @@
         else if(aksi === "tambah") ubahSkor(i, 10);
         else if(aksi === "kurang") ubahSkor(i, -5);
         else if(aksi === "nol") setSkorNol(i);
+        else if(aksi === "atur") aturSkorCustom(i);
+      });
+    });
+    wadah.querySelectorAll("input[data-skor-custom]").forEach(function(inp){
+      inp.addEventListener("keydown", function(ev){
+        if(ev.key === "Enter"){ ev.preventDefault(); aturSkorCustom(Number(inp.getAttribute("data-skor-custom"))); }
       });
     });
     var juri = $("formJuri"); juri.innerHTML = "";
@@ -225,6 +236,15 @@
   }
   function setSkorNol(i){
     regu[i].skor = 0;
+    renderRegu(); simpanState(); syncOtomatis();
+  }
+
+  function aturSkorCustom(i){
+    var inp = document.querySelector("input[data-skor-custom=\"" + i + "\"]");
+    if(!inp) return;
+    var v = parseInt(inp.value, 10);
+    if(isNaN(v)) return;
+    regu[i].skor = v;
     renderRegu(); simpanState(); syncOtomatis();
   }
 
