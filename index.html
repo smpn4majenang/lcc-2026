@@ -65,16 +65,8 @@
   <div class="bel-status" id="statusBel">SISTEM BEL SIAP &mdash; Tekan bel regu atau tombol keyboard di bawah</div>
   <p class="kecil" style="text-align:center;margin:6px 0">Shortcut bel: Regu A <kbd>1</kbd> / <kbd>A</kbd> &nbsp;|&nbsp; Regu B <kbd>2</kbd> / <kbd>S</kbd> &nbsp;|&nbsp; Regu C <kbd>3</kbd> / <kbd>D</kbd> &nbsp;|&nbsp; Reset bel <kbd>R</kbd></p>
 
-  <section class="cards" id="kartuRegu"></section>
-
   <section class="panel">
-    <h2>PANEL JURI</h2>
-    <div class="grid3" id="formJuri"></div>
-    <div class="btn-row" style="justify-content:flex-start;margin-top:12px">
-      <button class="btn" id="btnTerapkanJuri" type="button">Terapkan Nama &amp; Skor</button>
-      <button class="btn kuning" id="btnResetBel" type="button">Reset Bel</button>
-      <button class="btn merah" id="btnResetLomba" type="button">Reset Pertandingan</button>
-    </div>
+    <h2>DURASI TIMER</h2>
     <h3 style="margin:20px 0 8px">Durasi Timer</h3>
     <div class="btn-row" style="justify-content:flex-start">
       <button class="btn abu" data-detik="15" type="button">15 Detik</button>
@@ -91,10 +83,26 @@
       <button class="btn kuning" id="btnJedaTimer" type="button">Jeda</button>
       <button class="btn abu" id="btnResetTimer" type="button">Reset Timer</button>
     </div>
+    <p class="kecil" id="pesanTimer"></p>
+  </section>
+
+  <section class="cards" id="kartuRegu"></section>
+
+  <section class="panel">
+    <h2>PANEL JURI</h2>
+    <div class="grid3" id="formJuri"></div>
+    <div class="btn-row" style="justify-content:flex-start;margin-top:12px">
+      <button class="btn" id="btnTerapkanJuri" type="button">Terapkan Nama &amp; Skor</button>
+      <button class="btn kuning" id="btnResetBel" type="button">Reset Bel</button>
+      <button class="btn merah" id="btnResetLomba" type="button">Reset Pertandingan</button>
+    </div>
     <p class="kecil" id="pesanJuri"></p>
   </section>
 
-  <section class="panel">
+  <!-- Panel Sheets disembunyikan dari tampilan (atas permintaan Wartam):
+       URL sudah terisi dan Auto-Sync tetap berjalan di latar.
+       Untuk menampilkan lagi, hapus style="display:none" di bawah ini. -->
+  <section class="panel" style="display:none">
     <h2>INTEGRASI GOOGLE SHEETS</h2>
     <p class="kecil" style="margin-top:0">Tempel URL Web App dari Code.gs di sini. URL hanya disimpan di browser ini, tidak dikirim ke tempat lain selain Web App tersebut.</p>
     <div class="field"><label for="inputSheetsUrl">URL Deployment Web App Google Apps Script</label><input id="inputSheetsUrl" type="text" value="https://script.google.com/macros/s/AKfycbwXgrazYQiv0r0O21K-_phW7GC47UsJUEbSJ12R512mp_--r4hv9n1nfM-4pcdqLDdflQ/exec"></div>
@@ -236,7 +244,7 @@
       if(sisaDetik <= 0){
         jedaTimer();
         bunyi();
-        $("pesanJuri").textContent = "Waktu habis!";
+        $("pesanTimer").textContent = "Waktu habis!";
       }
     }, 1000);
   }
