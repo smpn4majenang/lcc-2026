@@ -7,6 +7,16 @@ ISI PAKET:
   sinkronisasi ke Google Sheets.
 - Code.gs    : backend Google Sheets (ping, getScores, updateScores).
 
+TATA LETAK (revisi 27 Okt malam):
+- Panel Integrasi Google Sheets DISEMBUNYIKAN dari tampilan
+  (display:none di index.html): URL sudah terisi dan Auto-Sync
+  tetap berjalan di latar, tapi URL dan tombol Sheets tidak terlihat
+  penonton. Untuk menampilkan lagi, hapus style="display:none"
+  pada section panel Sheets di index.html.
+- Blok Durasi Timer dipindah ke ATAS papan skor (di bawah status bel),
+  supaya juri tidak perlu menggulir ke bawah untuk mengatur timer.
+  Panel Juri kini hanya berisi nama/skor dan tombol Terapkan/Reset.
+
 CARA MEMAKAI TANPA SHEETS (langsung pakai):
 1. Buka index.html di browser / proyektor.
 2. Juri mengatur nama regu dan skor di PANEL JURI, lalu Terapkan.
