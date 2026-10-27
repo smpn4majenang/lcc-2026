@@ -1,0 +1,44 @@
+PANDUAN — LIVE SKOR LCC (papan skor bel 3 regu + Google Sheets)
+================================================================
+
+ISI PAKET:
+- index.html : halaman papan skor live (buka langsung di browser, atau
+  tayangkan lewat GitHub Pages). Tidak butuh internet, kecuali untuk
+  sinkronisasi ke Google Sheets.
+- Code.gs    : backend Google Sheets (ping, getScores, updateScores).
+
+CARA MEMAKAI TANPA SHEETS (langsung pakai):
+1. Buka index.html di browser / proyektor.
+2. Juri mengatur nama regu dan skor di PANEL JURI, lalu Terapkan.
+3. Bel: klik tombol Tekan Bel di kartu regu, atau keyboard
+   Regu A = 1/A, Regu B = 2/S, Regu C = 3/D, Reset bel = R.
+4. Timer: pilih 15/30/60 detik atau isi kustom, lalu Mulai/Jeda/Reset.
+5. Skor di halaman ini tersimpan otomatis di browser yang membukanya,
+   jadi kalau halaman dimuat ulang, skor tidak hilang dari browser itu.
+
+CARA MENGHUBUNGKAN KE GOOGLE SHEETS:
+1. Buat spreadsheet baru di Google Sheets.
+2. Salin ID-nya dari alamat spreadsheet, tempel ke SPREADSHEET_ID
+   di Code.gs (ganti tulisan GANTI_DENGAN_ID_SPREADSHEET).
+3. Buka Apps Script (script.google.com), proyek baru, tempel Code.gs,
+   Simpan.
+4. Deploy > New deployment > Web app:
+     Execute as     : Me
+     Who has access : Anyone
+   Salin URL Web App hasil deploy.
+5. URL Web App hasil deploy Bapak (27 Okt malam, sudah terverifikasi
+   ping + getScores) SUDAH TERISI di kolom "URL Deployment Web App"
+   di index.html, jadi tidak perlu ditempel manual lagi. Tinggal
+   centang Auto-Sync Skor, lalu klik Tes Koneksi. Bila berhasil,
+   status berubah menjadi Terhubung.
+6. Setelah itu, setiap perubahan skor/nama akan diupload otomatis.
+   Tombol Upload Skor Saat Ini dan Ambil Data Sheet (Import)
+   bisa dipakai manual kapan saja.
+
+CATATAN:
+- Tab Sheet yang dipakai bernama "Skor" (dibuat otomatis bila belum ada):
+  kolom A Nama Regu, kolom B Skor, kolom C Terakhir Diperbarui.
+- Bila URL Web App diganti (deploy ulang), tempel URL baru ke kolom
+  yang sama di halaman papan skor, lalu Tes Koneksi lagi.
+- Halaman ini terpisah dari kuis LCC (40 pilihan ganda + 5 esai);
+  papan ini hanya menampilkan skor babak bel/rebutan yang diatur juri.
